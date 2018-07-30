@@ -66,9 +66,11 @@ git add .
 git commit
 
 press i
-write your  commit comment
+write your  "controller middleware process"
 
-pres esc + wq
+pres esc + :wq
+
+git push origin master
 
 
 
