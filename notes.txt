@@ -1,0 +1,162 @@
+//MIDDLEWARE
+/*mechanism for filtering HTTP requests entering your application*/
+
+
+1. In your terminal (git bash)  and in the root directory of your project type command: 
+    
+  php artisan make:middleware CheckAge
+
+2. Go to the generated file 'app/Http/Middleware/CheckAge.php' and add the code to 
+
+  public function handle($request, Closure $next){
+
+    if ($request->age <= 200) {
+        return redirect('foo');
+    }
+
+    return $next($request);
+
+  }
+
+3. Go to 'routes/web.php' and write the following code to 
+
+    Route::get('/middleware/{age}', function ($age) {
+      return view ('age', array('age'=>$age));
+    })->middleware('age');
+
+
+4. Go to app/Http/Kernel.php and add line 'age' => \App\Http\Middleware\CheckAge::class' to setup the middleware
+
+    protected $routeMiddleware = [
+      'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+      'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+      'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+      'can' => \Illuminate\Auth\Middleware\Authorize::class,
+      'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+      'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+
+      //just add this line
+      'age' => \App\Http\Middleware\CheckAge::class
+    ];
+
+5. Create  the view 'resources/views/age.blade.php' file and add the following code:
+
+    Your age is: {{$age}}
+
+6. Start your server by typing in the terminal (git bash) the following command:
+
+    php artisan serve
+
+7. In you browser, type the following urls:
+
+    a. localhost:8000/middleware/300
+
+    observe the response
+
+    b. localhost:8000/middleware/200
+
+    observe the response
+
+
+
+8. commit your code
+
+git status
+git add .
+git commit
+
+press i
+write your  commit comment
+
+pres esc + wq
+
+
+
+
+
+
+
+//CONTROLLER
+/* group related request handling logic into a single class */
+
+
+1. In your terminal (git bash) and route directory of your project, type the following command:
+
+    php artisan make:controller PagesController
+
+2. Go to the generated file in 'app/Http/Controllers/PagesController.php' and add the following code:
+
+    public function contactPage(){
+      return view('pages.contact');
+    }
+
+3. In your routes/web.php add the following code:
+
+    Route::get('/pages/contact', 'PagesController@contactPage');
+
+
+4. Create the 'pages' folder inside resources/views/
+
+
+5. Create the file 'contact.blade.php' in resources/views/pages and add the following code:
+
+    <h1>Contact Page</h1>
+
+6. Start your server by typing command: 
+
+    php artisan serve
+
+7. Open your browser and type the following url in the address bar:
+
+    localhost:8000/pages/contact
+
+    observe the response
+
+
+
+
+
+
+// MIDDLEWARE IN CONTROLLER
+
+1. Open you app/Http/Controllers/PagesController file and add the following code:
+
+    //as convention place this function to the top most of the class body
+    public function __construct(){
+      $this->middleware('age')->only('middlewareAgePage');
+    }
+
+
+    public function middlewareAgePage(Request $request){
+      $age = $request->age;
+
+      return view('age', array('age'=>$age));
+    }
+
+2. Add the following code to you routes/web.php file:
+
+    Route::get('/pages/middleware/{age}', 'PagesController@middlewareAgePage');
+
+
+3. Start your server by issuing the folowing command to your terminal:
+
+    php artisan serve
+
+4. Open browser and type following url in the address bar:
+
+    localhost:8000/pages/middleware/300
+
+    observe the response
+
+    local host:8000/pages/middleware/199
+
+    observe the response
+
+
+
+
+  
+
+
+
+
