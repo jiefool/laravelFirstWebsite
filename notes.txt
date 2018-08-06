@@ -157,7 +157,41 @@ git push origin master
 
 
 
+
+//SETTING UP THE DABASE
+1. open your xampp control panel
+2. start mysql server and apache server
+3. goto localhost/phpmyadmin in your browser
+4. login to phpmyadmin (user: root, pass: <blank>)
+4. create new database
+
+
+3. In the root of your directory, find .env file and edit the following part
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_first_website
+DB_USERNAME=root
+DB_PASSWORD=
   
+
+
+8. php artisan migrate
+9. php artisan make:controller CrushesController --resource
+
+10. In app/Http/Controllers/CrushesControllers.php add the following code:
+
+use App\Http\Crush;
+
+
+public function index(){
+  ...
+  $crushes = Crush::all();
+
+  return view('crushes/index.blade.php')
+}
+
 
 
 
